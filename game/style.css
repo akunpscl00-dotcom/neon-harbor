@@ -1,0 +1,91 @@
+/* Neon Harbor HUD, menus and overlays. Sunset palette: coral, gold, teal. */
+:root {
+  --coral: #ff6f61;
+  --gold: #ffc857;
+  --teal: #3fd6c6;
+  --ink: #fff7ec;
+  --shade: rgba(12, 8, 24, 0.62);
+  --font: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #1a1026; font-family: var(--font); color: var(--ink); user-select: none; }
+#view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+.hidden { display: none !important; }
+#status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+#hud { position: fixed; inset: 0; pointer-events: none; }
+#hud-top-right { position: absolute; top: 18px; right: 26px; text-align: right; text-shadow: 0 2px 4px #000a; }
+#hud-clock { font-size: 20px; letter-spacing: 2px; opacity: 0.9; }
+#hud-money { font-size: 34px; font-weight: 800; color: #9bf59b; -webkit-text-stroke: 1px #0a2a0a; }
+#hud-wanted { font-size: 30px; letter-spacing: 3px; height: 38px; }
+#hud-wanted .on { color: var(--gold); text-shadow: 0 0 10px var(--coral); }
+#hud-wanted .off { color: #ffffff33; }
+#hud-wanted.flash .on { animation: blink 0.5s infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+#hud-weapon { font-size: 18px; margin-top: 2px; }
+#hud-weapon-name { color: var(--teal); font-weight: 700; }
+
+#hud-minimap-wrap { position: absolute; left: 24px; bottom: 22px; width: 220px; }
+#hud-minimap { display: block; width: 220px; height: 220px; border-radius: 50%; border: 3px solid #fff7ecdd; box-shadow: 0 0 18px #0009; background: #123; }
+#hud-bars { display: flex; gap: 6px; margin-top: 8px; }
+#hud-bars .bar { flex: 1; height: 9px; background: #0008; border: 1px solid #fff5; border-radius: 3px; overflow: hidden; }
+#hud-health { height: 100%; background: linear-gradient(90deg, #4cd964, #9bf59b); width: 100%; }
+#hud-armor { height: 100%; background: linear-gradient(90deg, #3a8dff, #8fd0ff); width: 0%; }
+
+#hud-objective { position: absolute; top: 18px; left: 26px; max-width: 420px; background: var(--shade); padding: 10px 14px; border-left: 4px solid var(--gold); border-radius: 4px; }
+#hud-objective:empty, #hud-objective.empty { display: none; }
+#hud-mission-title { font-size: 13px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; }
+#hud-mission-text { font-size: 18px; margin-top: 3px; }
+#hud-timer { font-size: 22px; color: var(--coral); font-weight: 800; }
+
+#hud-vehicle { position: absolute; right: 26px; bottom: 26px; text-align: right; text-shadow: 0 2px 4px #000a; }
+#hud-vehicle-name { font-size: 16px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+#hud-speed { font-size: 40px; font-weight: 800; }
+#hud-radio { font-size: 14px; color: var(--teal); }
+
+#hud-district { position: absolute; right: 26px; bottom: 140px; font-size: 30px; font-weight: 800; letter-spacing: 3px; color: var(--ink); text-shadow: 0 0 12px var(--coral), 0 2px 3px #000; opacity: 0; transition: opacity 0.6s; font-style: italic; }
+#hud-district.show { opacity: 1; }
+#hud-subtitle { position: absolute; left: 50%; bottom: 70px; transform: translateX(-50%); max-width: 760px; text-align: center; font-size: 21px; text-shadow: 0 2px 3px #000, 0 0 8px #000; }
+#hud-subtitle b { color: var(--gold); }
+#hud-feed { position: absolute; left: 26px; top: 140px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+#hud-feed div { background: var(--shade); padding: 4px 10px; border-radius: 3px; border-left: 3px solid var(--teal); }
+#hud-prompt { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); font-size: 17px; background: var(--shade); padding: 6px 14px; border-radius: 4px; }
+#hud-prompt:empty { display: none; }
+#hud-prompt kbd { background: var(--ink); color: #222; padding: 0 6px; border-radius: 3px; font-weight: 700; }
+#hud-crosshair { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 2px solid #fffc; border-radius: 50%; box-shadow: 0 0 3px #000; }
+#hud-crosshair::after { content: ""; position: absolute; left: 8px; top: 8px; width: 2px; height: 2px; background: #fff; }
+#hud-crosshair.hit { border-color: var(--coral); }
+#hud-damage { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(200, 0, 30, 0.75)); opacity: 0; transition: opacity 0.25s; }
+#hud-big { position: absolute; left: 0; right: 0; top: 36%; text-align: center; font-size: 72px; font-weight: 900; letter-spacing: 8px; font-style: italic; color: var(--gold); text-shadow: 0 0 24px var(--coral), 0 4px 0 #3b0a2a; opacity: 0; transition: opacity 0.4s; }
+#hud-big.show { opacity: 1; }
+#hud-big small { display: block; font-size: 22px; letter-spacing: 3px; color: var(--ink); font-style: normal; }
+
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#title { background: linear-gradient(180deg, rgba(30, 10, 50, 0.15), rgba(30, 10, 50, 0.65)); }
+.logo { text-align: center; line-height: 0.85; margin-bottom: 40px; transform: rotate(-4deg); }
+.logo-neon { display: block; font-size: 120px; font-weight: 900; font-style: italic; color: #fff0f6; text-shadow: 0 0 8px #ff4fa3, 0 0 28px #ff4fa3, 0 0 60px #ff2d7a; letter-spacing: 6px; }
+.logo-harbor { display: block; font-size: 96px; font-weight: 900; font-style: italic; background: linear-gradient(180deg, #ffe08a, #ff8a5b 60%, #d9437a); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 10px; filter: drop-shadow(0 5px 0 #3b0a2a); }
+.logo-sub { font-size: 22px; letter-spacing: 16px; color: var(--teal); margin-top: 18px; text-shadow: 0 0 10px #0ff8; }
+.menu { display: flex; flex-direction: column; gap: 10px; min-width: 300px; }
+.menu button, .panel button { pointer-events: auto; font-family: var(--font); font-size: 22px; padding: 10px 24px; background: var(--shade); color: var(--ink); border: 2px solid #fff3; border-radius: 4px; cursor: pointer; letter-spacing: 2px; text-align: left; }
+.menu button:hover, .menu button.sel, .panel button:hover { border-color: var(--gold); color: var(--gold); background: rgba(60, 20, 60, 0.8); }
+.menu button:disabled { opacity: 0.35; cursor: default; }
+.title-foot { position: absolute; bottom: 20px; font-size: 14px; opacity: 0.75; letter-spacing: 2px; }
+
+#pause, #shop { background: rgba(14, 6, 26, 0.72); }
+.panel { width: min(920px, 94vw); height: min(620px, 90vh); background: rgba(20, 10, 34, 0.92); border: 2px solid #ffc85755; border-radius: 6px; display: flex; flex-direction: column; }
+.panel.small { width: min(520px, 94vw); height: auto; }
+.panel-head { padding: 14px 20px; font-size: 26px; font-weight: 800; font-style: italic; color: var(--gold); border-bottom: 1px solid #fff2; }
+.tabs { display: flex; border-bottom: 1px solid #fff2; }
+.tabs button { flex: 1; border: none; border-radius: 0; text-align: center; font-size: 17px; background: transparent; }
+.tabs button.sel { color: var(--gold); border-bottom: 3px solid var(--gold); }
+.panel-body { flex: 1; padding: 18px 22px; overflow: auto; font-size: 17px; line-height: 1.5; }
+.panel-body canvas { display: block; margin: 0 auto; max-width: 100%; max-height: 100%; border-radius: 4px; }
+.panel-body table { width: 100%; border-collapse: collapse; }
+.panel-body td { padding: 4px 6px; border-bottom: 1px solid #fff1; }
+.panel-body td:last-child { text-align: right; color: var(--gold); }
+.panel-body .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; }
+.panel-body input[type=range] { pointer-events: auto; width: 50%; }
+.panel-body h3 { margin: 4px 0 8px; color: var(--teal); font-size: 18px; letter-spacing: 2px; text-transform: uppercase; }
+.panel-body .log p { margin: 4px 0 10px; }
+.panel-body .log b { color: var(--gold); }

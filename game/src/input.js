@@ -1,53 +1,78 @@
-// Keyboard and pointer input. Held keys give a steering direction; one-shot presses (start or
-// restart, pause) are queued as bit flags and taken once by the loop, so a press between two
-// frames is never lost and never counted twice.
+// Keyboard and mouse: held keys, presses this frame, pointer-lock mouse look and buttons.
 
-export const ACTION_CONFIRM = 1;
-export const ACTION_PAUSE = 2;
+const held = new Set();
+const pressed = new Set();
+const mouse = { dx: 0, dy: 0, left: false, right: false, clicked: false, wheel: 0 };
+let canvas = null;
 
-const LEFT = new Set(['ArrowLeft', 'KeyA']);
-const RIGHT = new Set(['ArrowRight', 'KeyD']);
-const CONFIRM = new Set(['Space', 'Enter']);
-const PAUSE = new Set(['KeyP', 'Escape']);
-
-export function createInput(target) {
-  let left = false;
-  let right = false;
-  let actions = 0;
-
+export function initInput(element) {
+  canvas = element;
   window.addEventListener('keydown', (event) => {
-    if (LEFT.has(event.code)) left = true;
-    else if (RIGHT.has(event.code)) right = true;
-    else if (CONFIRM.has(event.code)) {
-      if (!event.repeat) actions |= ACTION_CONFIRM;
-    } else if (PAUSE.has(event.code)) {
-      if (!event.repeat) actions |= ACTION_PAUSE;
-    } else return;
-    event.preventDefault();
+    if (!held.has(event.code)) pressed.add(event.code);
+    held.add(event.code);
+    if (['Space', 'ArrowUp', 'ArrowDown', 'Tab'].includes(event.code)) event.preventDefault();
   });
-  window.addEventListener('keyup', (event) => {
-    if (LEFT.has(event.code)) left = false;
-    else if (RIGHT.has(event.code)) right = false;
+  window.addEventListener('keyup', (event) => held.delete(event.code));
+  window.addEventListener('blur', () => held.clear());
+  window.addEventListener('mousemove', (event) => {
+    if (document.pointerLockElement === canvas) {
+      mouse.dx += event.movementX;
+      mouse.dy += event.movementY;
+    }
   });
-  // A key released while the tab is hidden never sends keyup: let go of everything on blur.
-  window.addEventListener('blur', () => {
-    left = false;
-    right = false;
+  window.addEventListener('mousedown', (event) => {
+    if (event.button === 0) { mouse.left = true; mouse.clicked = true; }
+    if (event.button === 2) mouse.right = true;
   });
-  target.addEventListener('pointerdown', () => {
-    actions |= ACTION_CONFIRM;
+  window.addEventListener('mouseup', (event) => {
+    if (event.button === 0) mouse.left = false;
+    if (event.button === 2) mouse.right = false;
   });
+  window.addEventListener('wheel', (event) => { mouse.wheel += Math.sign(event.deltaY); }, { passive: true });
+  window.addEventListener('contextmenu', (event) => event.preventDefault());
+}
 
-  return {
-    /** -1 for left, 1 for right, 0 for neither or both. */
-    direction() {
-      return (right ? 1 : 0) - (left ? 1 : 0);
-    },
-    /** The one-shot presses since the last call, as ACTION_* flags. */
-    takeActions() {
-      const taken = actions;
-      actions = 0;
-      return taken;
-    },
-  };
+export function isDown(code) {
+  return held.has(code);
+}
+
+export function wasPressed(code) {
+  return pressed.has(code);
+}
+
+/** Axis from two key codes: -1, 0 or 1. */
+export function axis(negative, positive) {
+  return (held.has(positive) ? 1 : 0) - (held.has(negative) ? 1 : 0);
+}
+
+export function getMouse() {
+  return mouse;
+}
+
+export function lockPointer() {
+  if (canvas && document.pointerLockElement !== canvas && canvas.requestPointerLock) {
+    try { canvas.requestPointerLock(); } catch { /* not allowed yet */ }
+  }
+}
+
+export function unlockPointer() {
+  if (document.pointerLockElement) document.exitPointerLock();
+}
+
+export function pointerLocked() {
+  return document.pointerLockElement === canvas;
+}
+
+/** Call once at the end of every frame. */
+export function endFrame() {
+  pressed.clear();
+  mouse.dx = 0;
+  mouse.dy = 0;
+  mouse.clicked = false;
+  mouse.wheel = 0;
+}
+
+/** Drive input from code (the screenshot scenes use it). */
+export function simulateHold(code, down) {
+  if (down) held.add(code); else held.delete(code);
 }
