@@ -89,3 +89,67 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #1a1026; fon
 .panel-body h3 { margin: 4px 0 8px; color: var(--teal); font-size: 18px; letter-spacing: 2px; text-transform: uppercase; }
 .panel-body .log p { margin: 4px 0 10px; }
 .panel-body .log b { color: var(--gold); }
+
+/* ---- touch controls (touch.js; html.touch on phones and tablets) ---- */
+html.touch, html.touch body { touch-action: none; overscroll-behavior: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+#touch { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+#touch.hidden, #touch-pause.hidden, .tbtn.hidden { display: none; }
+#touch-look { position: absolute; left: 40%; right: 0; top: 0; bottom: 0; pointer-events: auto; touch-action: none; }
+#touch-stick-zone { position: absolute; left: 0; bottom: 0; width: 40%; height: 62%; pointer-events: auto; touch-action: none; }
+#touch-stick-base { position: absolute; left: 110px; top: calc(100% - 100px); width: 112px; height: 112px; margin: -56px 0 0 -56px; border-radius: 50%; border: 2px solid #fff6; background: radial-gradient(circle, #ffffff14, #00000040); opacity: 0.55; transition: opacity 0.15s; }
+#touch-stick-base.active { opacity: 0.95; }
+#touch-stick-knob { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: #fff0f6cc; box-shadow: 0 0 14px #ff4fa3aa; }
+#touch-buttons { position: absolute; right: max(10px, env(safe-area-inset-right)); bottom: 12px; width: 300px; height: 210px; pointer-events: none; }
+.tbtn { position: absolute; pointer-events: auto; touch-action: none; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 50%; width: 64px; height: 64px; font-size: 12px; font-weight: 800; line-height: 1.05; letter-spacing: 0.5px; color: #fff; background: rgba(20, 10, 34, 0.55); border: 2px solid #ffffff66; text-shadow: 0 1px 2px #000; }
+.tbtn.down { background: rgba(255, 79, 163, 0.6); border-color: #fff; }
+.tbtn.on { border-color: var(--gold); color: var(--gold); background: rgba(80, 50, 10, 0.6); }
+.tbtn-fire { right: 0; bottom: 0; width: 92px; height: 92px; font-size: 15px; border-color: #ff8a5b; }
+.tbtn-jump { right: 104px; bottom: 0; }
+.tbtn-car { right: 8px; bottom: 104px; width: 76px; height: 76px; font-size: 12px; border-color: var(--teal); }
+.tbtn-aim { right: 176px; bottom: 4px; }
+.tbtn-run { right: 96px; bottom: 82px; }
+.tbtn-weapon { right: 176px; bottom: 82px; font-size: 11px; }
+.tbtn-reload { right: 96px; bottom: 156px; width: 56px; height: 56px; font-size: 11px; }
+.tbtn-use { right: 168px; bottom: 156px; width: 56px; height: 56px; }
+.tbtn-horn { right: 176px; bottom: 82px; }
+#touch-pause { position: fixed; z-index: 30; top: 8px; left: 50%; transform: translateX(-50%); width: 46px; height: 40px; border-radius: 8px; font-family: var(--font); font-size: 18px; font-weight: 900; color: #fff; background: rgba(20, 10, 34, 0.6); border: 2px solid #ffffff66; touch-action: none; }
+html:not(.touch) #touch-pause, html:not(.touch) #touch-rotate { display: none; }
+#touch-rotate { display: none; }
+
+/* phone-sized screens: shrink the HUD so the thumbs and the map do not collide */
+html.touch #hud-minimap-wrap { left: auto; right: max(10px, env(safe-area-inset-right)); top: 8px; bottom: auto; width: 96px; }
+html.touch #hud-minimap { width: 96px; height: 96px; }
+html.touch #hud-top-right { right: 116px; top: 6px; }
+html.touch #hud-clock { font-size: 13px; }
+html.touch #hud-money { font-size: 20px; }
+html.touch #hud-wanted { font-size: 17px; height: 22px; }
+html.touch #hud-weapon { font-size: 12px; }
+html.touch #hud-objective { top: 8px; left: max(10px, env(safe-area-inset-left)); max-width: 34vw; padding: 5px 9px; }
+html.touch #hud-mission-title { font-size: 10px; letter-spacing: 1px; }
+html.touch #hud-mission-text { font-size: 12px; }
+html.touch #hud-timer { font-size: 14px; }
+html.touch #hud-feed { top: auto; bottom: 64%; left: 10px; font-size: 11px; }
+html.touch #hud-vehicle { right: auto; left: 50%; bottom: 6px; transform: translateX(-50%); text-align: center; }
+html.touch #hud-vehicle-name { font-size: 11px; }
+html.touch #hud-speed { font-size: 22px; }
+html.touch #hud-radio { font-size: 11px; }
+html.touch #hud-district { right: auto; left: 50%; transform: translateX(-50%); top: 54px; bottom: auto; font-size: 18px; }
+html.touch #hud-subtitle { bottom: 64px; max-width: 46vw; font-size: 13px; }
+html.touch #hud-prompt { top: 58%; font-size: 12px; }
+html.touch #hud-big { font-size: 38px; letter-spacing: 4px; }
+html.touch #hud-big small { font-size: 14px; }
+html.touch .logo { margin-bottom: 14px; }
+html.touch .logo-neon { font-size: min(120px, 15vh); }
+html.touch .logo-harbor { font-size: min(96px, 12vh); }
+html.touch .logo-sub { font-size: 13px; letter-spacing: 8px; margin-top: 8px; }
+html.touch .menu { gap: 6px; min-width: 220px; }
+html.touch .menu button { font-size: 16px; padding: 8px 18px; }
+html.touch .title-foot { bottom: 6px; font-size: 11px; }
+html.touch .panel { height: 92vh; }
+html.touch .tabs button { font-size: 12px; padding: 8px 4px; }
+html.touch .panel-body { font-size: 13px; padding: 10px 12px; }
+@media (orientation: portrait) {
+  html.touch #touch-rotate { display: flex; position: fixed; inset: 0; z-index: 40; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 30px; text-align: center; font-size: 18px; color: var(--ink); background: rgba(14, 6, 26, 0.94); }
+  #touch-rotate .phone { width: 44px; height: 76px; border: 3px solid var(--gold); border-radius: 8px; animation: nh-rotate 1.8s ease-in-out infinite; }
+}
+@keyframes nh-rotate { 0%, 20% { transform: rotate(0); } 60%, 100% { transform: rotate(90deg); } }

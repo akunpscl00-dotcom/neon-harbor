@@ -20,6 +20,7 @@ const CONTROLS = [
   ['H', 'Horn'],
   ['1-4, wheel', 'Choose weapon'],
   ['Esc / P', 'Pause menu, map and save'],
+  ['Touch', 'Left thumb: stick to walk / drive. Right thumb: drag to look. Buttons: Pukul/Tembak, Bidik, Lompat (Rem Tangan), Masuk Mobil / Keluar, Lari, Pakai, Senjata, Isi Peluru / Radio, Klakson. II = pause'],
 ];
 
 export class Menu {

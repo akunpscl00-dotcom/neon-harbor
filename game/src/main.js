@@ -17,6 +17,7 @@ import { Menu } from './menu.js';
 import { CameraRig } from './camera.js';
 import { Vehicle, vehicles, separateVehicles } from './vehicle.js';
 import { initInput, wasPressed, endFrame, lockPointer, unlockPointer } from './input.js';
+import { TouchControls } from './touch.js';
 import { initAudio, play, setEngine, setSiren, setRadioEnabled, volume, setVolumes } from './audio.js';
 import { readSave, writeSave, readSettings } from './save.js';
 import { stageShot } from './shots.js';
@@ -61,10 +62,11 @@ class Game {
       this.rig.sensitivity = settings.sensitivity ?? this.rig.sensitivity;
     }
     initInput(this.canvas);
+    this.touch = new TouchControls(this);
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('keydown', (e) => this.onKey(e));
     window.addEventListener('pointerdown', () => { initAudio(); setVolumes(); });
-    this.canvas.addEventListener('click', () => { if (this.mode === 'play') lockPointer(); });
+    this.canvas.addEventListener('click', () => { if (this.mode === 'play' && !this.touch.enabled) lockPointer(); });
     this.resize();
     this.player.body.group.visible = false;
     this.last = performance.now();
@@ -94,7 +96,7 @@ class Game {
 
   setMode(mode) {
     this.mode = mode;
-    if (mode === 'play') lockPointer(); else unlockPointer();
+    if (mode === 'play') { if (!this.touch.enabled) lockPointer(); } else unlockPointer();
     setRadioEnabled(mode === 'play' && !!this.player.vehicle);
   }
 
@@ -288,6 +290,7 @@ class Game {
 
   /** Advance the whole world by dt seconds. */
   step(dt) {
+    this.touch.update();
     this.time += dt;
     if (this.mode === 'title') { this.stepTitle(dt); return; }
     if (this.mode === 'pause' || this.mode === 'shop') return;
