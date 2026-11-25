@@ -1,0 +1,16 @@
+{
+  "name": "Neon Harbor: Port Halcyon",
+  "short_name": "Neon Harbor",
+  "description": "Game aksi dunia terbuka di kota Port Halcyon.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#140a22",
+  "theme_color": "#140a22",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
